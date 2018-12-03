@@ -1,0 +1,16 @@
+{
+  "name": "advent_of_code",
+  "version": "1.0.0",
+  "description": "advent of coding problem solving",
+  "main": "day2.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Olivier Gauthier-Farley",
+  "license": "ISC",
+  "dependencies": {
+    "FileReader": "^0.10.2",
+    "fs": "0.0.1-security",
+    "js": "^0.1.0"
+  }
+}
