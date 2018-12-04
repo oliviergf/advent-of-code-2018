@@ -41,7 +41,7 @@ part1And2 = () => {
     }
   }
 
-  findLonelyClaim = (x,y,lx,ly) => {
+  findLonelyClaim = (x,y,lx,ly,id) => {
     found = true;
     for(let i = 0; i < lx; i++){
       for(let j = 0; j < ly; j++){
@@ -52,7 +52,7 @@ part1And2 = () => {
       }
     }
     if(found === true){
-      console.log("FOUND THE GUY! x :" + x + " y: " + y + "lx: " + lx + "ly :" + ly)
+      console.log("FOUND THE GUY! id: " + id)
     }
   }
 
@@ -63,19 +63,19 @@ part1And2 = () => {
     y = parseInt(extractPosition(data[2])[1]);
     lx = parseInt(extractLength(data[3])[0]);
     ly = parseInt(extractLength(data[3])[1]);
-
     fillMap(x,y,lx,ly)
   }
 
   //part2
   for(let n = 0; n < claims.length -1 ; n++){
     data = claims[n].split(' ');
+    id = data[0];
     x = parseInt(extractPosition(data[2])[0]);
     y = parseInt(extractPosition(data[2])[1]);
     lx = parseInt(extractLength(data[3])[0]);
     ly = parseInt(extractLength(data[3])[1]);
 
-    findLonelyClaim(x,y,lx,ly)
+    findLonelyClaim(x,y,lx,ly,id)
   }
 
   nbOfOverlap = 0;
