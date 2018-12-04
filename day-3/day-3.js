@@ -1,7 +1,20 @@
 var fs = require('fs');
 var data = fs.readFileSync('./input.txt', 'utf8');
 
-part1 = () => {
+var startTime, endTime;
+
+function start() {
+  startTime = new Date();
+};
+
+function end() {
+  endTime = new Date();
+  var timeDiff = endTime - startTime; //in ms
+  console.log(timeDiff + " milliseconds");
+}
+
+part1And2 = () => {
+  start();
   let claims = data.split('\n')
   let myMap = new  Map();
 
@@ -72,6 +85,7 @@ part1 = () => {
     }
   }
   console.log("number of overlaping cases: " + nbOfOverlap)
+  end();
 }
 
-part1();
+part1And2();
