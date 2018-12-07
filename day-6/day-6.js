@@ -1,5 +1,5 @@
 let fs = require('fs');
-let data = fs.readFileSync('./test.txt', 'utf8');
+let data = fs.readFileSync('./input.txt', 'utf8');
 
 findBoardSize =(data)=>{
   maxI = 1;
@@ -7,9 +7,10 @@ findBoardSize =(data)=>{
 
   for(let i = 0; i < data.length; i++){
     data[i] = data[i].replace(" ","");
+    data[i] =  data[i].split(",");
 
-    let x = parseInt(data[i].charAt(0));
-    let y = parseInt(data[i].charAt(2));
+    let x = parseInt(data[i][0]);
+    let y = parseInt(data[i][1]);
 
     if(x > maxI){
       maxI = x;
@@ -26,7 +27,7 @@ findNearest=(i,j,data) =>{
   //find distance
   totalDistances = [];
   for(let n = 0; n < data.length; n++){
-    totalDistances.push(Math.abs(j - (parseInt(data[n].charAt(0))))+(Math.abs(i - (parseInt(data[n].charAt(2))))));
+    totalDistances.push(Math.abs(j - (parseInt(data[n][0])))+(Math.abs(i - (parseInt(data[n][1])))));
   }
 
   //checks who is the closest
@@ -87,7 +88,17 @@ calculateLargestArea = (board,listofInfinites) =>{
 
 part1 = () =>{
   data = data.split("\n")
+  elements = new Map();
+
+  //find all elements
+  for(let i = 0; i < data.length; i++){
+    elements.set(i,0);
+  }
+
+  elements.set('.',0);
+
   maxSize = findBoardSize(data);
+
   let board = [];
 
   for(let i = 0; i <= maxSize[1]; i++){
@@ -98,15 +109,32 @@ part1 = () =>{
     board.push(array);
   }
 
-  console.log(board)
-  console.log(board.length)
-  console.log(board[1].length)
-
   listofInfinites = findInfinites(board);
 
-  console.log(listofInfinites)
-
   calculateLargestArea(board,listofInfinites);
+
+  for(let i = 0; i < board.length; i++){
+    for(let j = 0 ; j< board[0].length; j++){
+      if(!listofInfinites.includes(board[i][j])){
+        count = elements.get(board[i][j]);
+        count++;
+        elements.set(board[i][j],count);
+      }
+    }
+  }
+  let maxCount = 0;
+
+  elements.forEach((value, key,)=>{
+    if(value > maxCount){
+      maxCount = value;
+    }
+  });
+  console.log(maxCount);
 }
 
+part2=()=>{
+  
+};
+
 part1();
+part2();
