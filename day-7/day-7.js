@@ -9,11 +9,6 @@
 let fs = require('fs');
 let data = fs.readFileSync('./input.txt', 'utf8');
 
-// function Node(value) {
-//   this.value = value;
-//   this.before = [];
-// }
-
 findAllSteps = (instructions) =>{
   listAllSteps = [];
   for(let i = 0 ; i < instructions.length; i++){
@@ -55,56 +50,84 @@ buildTree = (instructions) =>{
   return nodeMap;
 }
 
-findFirstStep = (allSteps,listOfNodes) =>{
-  let first;
+findFirstsStep = (allSteps,listOfNodes) =>{
+  let firsts = [];
 
   for(let i = 0; i < allSteps.length; i++){
     if(!listOfNodes.has(allSteps[i])){
-      first = allSteps[i];
+      firsts.push(allSteps[i]);
     }
   }
-  return first;
+  return firsts;
 }
 
-findOrder = (first, listOfNodes, allSteps) =>{
+findOrder = (firsts, listOfNodes, allSteps) =>{
   order = [];
-  order.push(first);
   availables = [];
 
+  firsts.sort((a,b)=>{
+    return a.charCodeAt(0) - b.charCodeAt(0);
+  })
+
+  // for(let i = 0; i < firsts.length;i++){
+  //   order.push(firsts[i]);
+  // }
+
+  order.push(firsts[0]);
+  firsts.splice(0,1);
+
+  for(let i = 0; i < firsts.length;i++){
+    availables.push(firsts[i]);
+  }
+
   listOfNodes.forEach((value,key)=>{
-    for(let i = 0; i < value.length; i++){
-      if(value[i] === first){
-        availables.push(key);
+    bool = true;
+
+    for(let n =0; n < value.length;n++){
+      if(!order.includes(value[n])){
+        bool = false;
       }
     }
-  })
+
+    if(bool){
+      availables.push(key);
+    }
+  });
 
   availables.sort((a,b)=>{
     return a.charCodeAt(0) - b.charCodeAt(0);
   })
 
+  console.log(availables)
+  console.log(order)
+  index = 0;
   while(order.length !== allSteps.length){
 
     let currentStep = availables[0];
+
+    ///C'EST ICI LE BUG, ON ARRIVE PAS A ENLEVER LE premier dude de availables....
     availables.splice(0,1);
 
     //adds an item
     order.push(currentStep);
 
-    //adds its successors to availables
     listOfNodes.forEach((value,key)=>{
-      for(let i = 0; i < value.length; i++){
-        if(value[i] === currentStep && (!availables.includes(key))){
-          availables.push(key);
+      bool = true;
+      for(let n =0; n < value.length;n++){
+        if(!order.includes(value[n])){
+          bool = false;
         }
       }
-    })
+      if(bool){
+        availables.push(key);
+      }
+    });
+
     availables.sort((a,b)=>{
       return a.charCodeAt(0) - b.charCodeAt(0);
     })
-
+    console.log(order)
   }
-  console.log(order)
   return order;
 }
 
@@ -114,17 +137,15 @@ part1 = () =>{
   // node = new Node("a");
   allSteps = findAllSteps(instructions);
 
-  console.log(allSteps)
-
   listOfNodes = buildTree(instructions);
 
-  console.log(listOfNodes)
+  firsts = findFirstsStep(allSteps,listOfNodes);
 
-  first = findFirstStep(allSteps,listOfNodes);
+  stepsInOrder = findOrder(firsts, listOfNodes, allSteps);
 
-  console.log(first)
+  console.log("stepsInOrder")
+  console.log(stepsInOrder)
 
-  stepsInOrder = findOrder(first, listOfNodes, allSteps);
 
 
 }
