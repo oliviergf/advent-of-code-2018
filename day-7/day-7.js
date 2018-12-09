@@ -1,11 +1,3 @@
-//faire une grosse liste chainee.
-
-//object noeud qui pointe sur le prochain.
-
-//debut == noeud qui a personne qui pointe dessu
-
-//fin == pointe sur personne
-
 let fs = require('fs');
 let data = fs.readFileSync('./input.txt', 'utf8');
 
@@ -26,8 +18,6 @@ findAllSteps = (instructions) =>{
   }
   return listAllSteps;
 }
-
-
 
 buildTree = (instructions) =>{
   let nodeMap = new Map();
@@ -78,8 +68,6 @@ findOrder = (firsts, listOfNodes, allSteps) =>{
     availables.push(firsts[i]);
   }
 
-  //ok first step in added in the order and removed from availables, remaingin firts added to availables
-
   listOfNodes.forEach((value,key)=>{
     bool = true;
 
@@ -99,25 +87,7 @@ findOrder = (firsts, listOfNodes, allSteps) =>{
     return a.charCodeAt(0) - b.charCodeAt(0);
   })
 
-  console.log("order")
-  console.log(order)
-
-  console.log("availables")
-  console.log(availables)
-
-  console.log("listOfNodes")
-  console.log(listOfNodes)
-
-
   while(order.length !== allSteps.length){
-    // console.log("order")
-    // console.log(order)
-    //
-    // console.log("availables")
-    // console.log(availables)
-    // console.log(listOfNodes)
-
-
     availables.sort((a,b)=>{
       return a.charCodeAt(0) - b.charCodeAt(0);
     })
@@ -147,18 +117,85 @@ findOrder = (firsts, listOfNodes, allSteps) =>{
 part1 = () =>{
   instructions = data.split("\n");
 
-  // node = new Node("a");
   allSteps = findAllSteps(instructions);
 
   listOfNodes = buildTree(instructions);
 
   firsts = findFirstsStep(allSteps,listOfNodes);
 
-  stepsInOrder = findOrder(firsts, listOfNodes, allSteps);
+  // stepsInOrder = findOrder(firsts, listOfNodes, allSteps);
+  // console.log("stepsInOrder")
+  // console.log(stepsInOrder.toString());
 
-  console.log("stepsInOrder")
-  console.log(stepsInOrder.toString())
-
+  time = part2(firsts, listOfNodes, allSteps);
+  console.log(time)
 }
+
+
+part2 = (firsts, listOfNodes, allSteps)=>{
+  done = [];
+  availables = [];
+  workers = [];
+  time = 0;
+
+  firsts.sort((a,b)=>{
+    return a.charCodeAt(0) - b.charCodeAt(0);
+  })
+
+  for(let i = 0; i < firsts.length;i++){
+    availables.push(firsts[i]);
+  }
+
+  while(workers.length < 5 && availables.length !== 0){
+    workers.push([availables[0].charCodeAt(0)-4,availables[0]]);
+    availables.shift();
+  }
+
+  console.log(workers)
+  console.log(availables)
+
+  while(done.length !== allSteps.length){
+    time++;
+
+    //sorts availables
+    availables.sort((a,b)=>{
+      return a.charCodeAt(0) - b.charCodeAt(0);
+    })
+
+    //removes a second from tasks
+    for(let n = 0; n < workers.length; n++){
+      workers[n][0]--;
+    }
+
+    //check if any work done, if so, adds to done array and remove from worker
+    for (var i = workers.length - 1; i >= 0; i--) {
+      if (workers[i][0] === 0) {
+          done.push(workers[i][1]);
+          workers.splice(i, 1);
+      }
+    }
+
+    //checks if we can add another step in availables
+    listOfNodes.forEach((value,key)=>{
+      bool = true;
+      for(let n = 0; n < value.length;n++){
+        if(!done.includes(value[n])){
+          bool = false;
+        }
+      }
+      if(bool){
+        availables.push(key);
+        listOfNodes.delete(key);
+      }
+    });
+
+    //if theres workers and availables, push to workers and remove from availables
+    while(workers.length < 5 && availables.length !== 0){
+      workers.push([availables[0].charCodeAt(0)-4,availables[0]]);
+      availables.shift();
+    }
+  }
+  return time;
+};
 
 part1();
