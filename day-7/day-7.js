@@ -69,16 +69,16 @@ findOrder = (firsts, listOfNodes, allSteps) =>{
     return a.charCodeAt(0) - b.charCodeAt(0);
   })
 
-  // for(let i = 0; i < firsts.length;i++){
-  //   order.push(firsts[i]);
-  // }
-
+  //adds the first
   order.push(firsts[0]);
   firsts.splice(0,1);
+
 
   for(let i = 0; i < firsts.length;i++){
     availables.push(firsts[i]);
   }
+
+  //ok first step in added in the order and removed from availables, remaingin firts added to availables
 
   listOfNodes.forEach((value,key)=>{
     bool = true;
@@ -91,6 +91,7 @@ findOrder = (firsts, listOfNodes, allSteps) =>{
 
     if(bool){
       availables.push(key);
+      listOfNodes.delete(key);
     }
   });
 
@@ -98,18 +99,34 @@ findOrder = (firsts, listOfNodes, allSteps) =>{
     return a.charCodeAt(0) - b.charCodeAt(0);
   })
 
-  console.log(availables)
+  console.log("order")
   console.log(order)
-  index = 0;
+
+  console.log("availables")
+  console.log(availables)
+
+  console.log("listOfNodes")
+  console.log(listOfNodes)
+
+
   while(order.length !== allSteps.length){
+    // console.log("order")
+    // console.log(order)
+    //
+    // console.log("availables")
+    // console.log(availables)
+    // console.log(listOfNodes)
+
+
+    availables.sort((a,b)=>{
+      return a.charCodeAt(0) - b.charCodeAt(0);
+    })
 
     let currentStep = availables[0];
-
-    ///C'EST ICI LE BUG, ON ARRIVE PAS A ENLEVER LE premier dude de availables....
-    availables.splice(0,1);
-
     //adds an item
     order.push(currentStep);
+
+    availables.shift();
 
     listOfNodes.forEach((value,key)=>{
       bool = true;
@@ -120,13 +137,9 @@ findOrder = (firsts, listOfNodes, allSteps) =>{
       }
       if(bool){
         availables.push(key);
+        listOfNodes.delete(key);
       }
     });
-
-    availables.sort((a,b)=>{
-      return a.charCodeAt(0) - b.charCodeAt(0);
-    })
-    console.log(order)
   }
   return order;
 }
@@ -144,9 +157,7 @@ part1 = () =>{
   stepsInOrder = findOrder(firsts, listOfNodes, allSteps);
 
   console.log("stepsInOrder")
-  console.log(stepsInOrder)
-
-
+  console.log(stepsInOrder.toString())
 
 }
 
